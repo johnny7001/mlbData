@@ -99,7 +99,7 @@ def playerPitching():
     rank = 'strikeouts'
     team_list = teamName_list()
         
-    for year in range(2020, 2021):
+    for year in range(2020, 2023):
     # year = 2021 
         for p_team in team_list:
             sele_object = sele_object.replace("'", "")
@@ -117,7 +117,7 @@ def playerPitching():
             respDict = json.loads(resp.text) # type = dict
             stats = respDict['stats']
             count = 1
-            for player in stats[:3]:
+            for player in stats:
                 p_name = player['playerName'].replace(' ', '_').replace("'", " ")
                 p_rank = player['rank']
                 p_win = player['wins']
