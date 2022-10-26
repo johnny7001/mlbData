@@ -7,7 +7,7 @@
 * Docker打包爬蟲程式, 能直接在linux tmux上開啟多視窗執行爬蟲腳本並監測運行情況  
 * 串接telegram bot, 建立指令對爬蟲腳本或資料庫進行操作, 並能自動通知目前更新的進度  
 * 設定每週一到日下午16:00更新資料
-===========================================================================================  
+================================================================================= 
 
 # 資料庫結構設計  
 * 抓取球隊名稱
@@ -20,16 +20,16 @@ column_name = 球員數據(id, team_id, rank, name, positions, years...)
 table_name = mlb_playerPitching
 column_name = 球員數據(id, team_id, rank, name, positions, years...)
 
-===========================================================================================  
+=================================================================================
 
 # 作品介紹
 抓取聯盟的三支球隊的隊員例行賽數據排行 (隊伍選擇三支球隊 Yankees, Red_sox, Dodgers)  
 * 打者 --> 篩選條件：全壘打排行，藉此用全壘打與其他數據比較   
 * 投手 --> 篩選條件：三振排行，藉此用全壘打與其他數據比較   
 
-===========================================================================================  
+=================================================================================
 
-# url 參數參考
+# mlb網站 -> URL參數參考
 * url = https://bdfed.stitch.mlbinfra.com/bdfed/stats/player?stitch_env=prod&season=2022&sportId=1&stats=season& group=hitting&gameType=R&limit=25&offset=0&sortStat=homeRuns&order=desc&teamId=147
 
 * 大分類 /stats/ + player or team  打者或球隊
@@ -42,5 +42,14 @@ column_name = 球員數據(id, team_id, rank, name, positions, years...)
 * position = 守備位置 (ex; 三壘 = 3B)
 * playerPool = 打者分類 (Rookies, Current Players...)
 
+=================================================================================
+
+# API使用參考  
+http://127.0.0.1:4434/player/pitching/Yankees/2022/top5/orderBY=SO  
+* group (string): hitting, pitching -> 選擇打擊或投球數據  
+* team (string): Yankees, Dodgers, Dodgers -> 選擇隊伍  
+* year (int): 2020, 2021, 2022 -> 選擇年份  
+* sortRange (int): 輸入要抓取的數量, 最大range = 25
+* order_by (string): 輸入要排序的條件, 可根據資料庫欄位進行排序 
 
     
