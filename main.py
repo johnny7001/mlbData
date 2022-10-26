@@ -17,9 +17,9 @@ def main():
             message(f'爬取打擊資料失敗, 錯誤碼：{err}')
     
 if __name__=='__main__':
-    main()
-    # scheduler = BlockingScheduler(timezone="Asia/Taipei")
-    # # 每週一到日 下午16:00更新
-    # scheduler.add_job(main, 'cron', day_of_week='*', hour=16, minute=00)
+    # main()
+    scheduler = BlockingScheduler(timezone="Asia/Taipei")
+    # 每週一到日 下午16:00更新
+    scheduler.add_job(main, 'cron', day_of_week='*', hour=16, minute=00)
 
-    # scheduler.start()
+    scheduler.start()
