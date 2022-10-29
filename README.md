@@ -46,11 +46,47 @@ column_name = 球員數據(id, team_id, rank, name, positions, years...)
 =================================================================================
 
 # API使用參考  
-http://127.0.0.1:4434/player/pitching/Yankees/2022/top5/orderBY=SO  
+http://127.0.0.1:4434/player/group=pitching/team=Yankees/year=2022/top=1/orderBY=SO
 * group (string): hitting, pitching -> 選擇打擊或投球數據  
 * team (string): Yankees, Dodgers, Dodgers -> 選擇隊伍  
 * year (int): 2020, 2021, 2022 -> 選擇年份  
 * sortRange (int): 輸入要抓取的數量, 最大range = 25
-* order_by (string): 輸入要排序的條件, 可根據資料庫欄位進行排序 
-
+* order_by (string): 輸入要排序的條件, 可根據資料庫欄位進行排序  
+````
+    {
+        "AVG": 0.209,
+        "BB": 50,
+        "ER": 78,
+        "ERA": 3.5,
+        "H": 154,
+        "HB": 2,
+        "HR": 33,
+        "IP": 200,
+        "L": 8,
+        "R": 81,
+        "SO": 257,
+        "W": 13,x
+        "WHIP": 1.02,
+        "group": "pitching",
+        "id": 218,
+        "name": "Gerrit_Cole",
+        "rank_count": null,
+        "t.id": 147,
+        "t.updated_at": "Sun, 23 Oct 2022 13:06:34 GMT",
+        "team_id": 147,
+        "team_name": "Yankees",
+        "team_rank": 1,
+        "updated_at": "Wed, 26 Oct 2022 21:24:51 GMT",
+        "year": 2022
+    }
+````
+http://127.0.0.1:4434/team_name=all
+*  輸入球隊名稱, 可查詢對應的球隊id, 輸入all可查詢全部球隊
+````
+{
+    "111": "Red_Sox",
+    "119": "Dodgers",
+    "147": "Yankees"
+}
+````
     
