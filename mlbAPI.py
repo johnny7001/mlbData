@@ -22,8 +22,8 @@ def home():
 
 
 @app.route('/player/<group>/<team>/<int:year>/top<int:sortRange>/orderBY=<order_by>', methods=['GET'])  
-def get_HittingData(group, team, year, sortRange, order_by) -> list:
-    """_summary_
+def get_HittingData(group:str, team:str, year:int, sortRange:int, order_by:str) -> list:
+    """
     Args:
         group (string): hitting, pitching
         team (string): Yankees, Dodgers, Dodgers
