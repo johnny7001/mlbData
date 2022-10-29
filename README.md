@@ -18,7 +18,8 @@ table_name = mlb_playerHitting
 column_name = 球員數據(id, team_id, rank, name, positions, years...)
 * 抓取近三年球員投球數據 (2020-2022例行賽球員數據)    
 table_name = mlb_playerPitching
-column_name = 球員數據(id, team_id, rank, name, positions, years...)
+column_name = 球員數據(id, team_id, rank, name, positions, years...)  
+![image](https://github.com/johnny7001/mlbData/blob/c731f7615ab1bf6f5fa31aca0a5a2d2edbe9ca77/status/img/db_schemas.jpg)
 
 =================================================================================
 
