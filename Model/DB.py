@@ -83,3 +83,11 @@ class Mlb_playerHitting(db.Model):
         self.avg = avg
         self.ops = ops
         self.year = year
+        
+# 球隊名稱
+class Mlb_teamName(db.Model):
+    __tablename__ = 'mlb_teamName'
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    team_name = db.Column(db.String(45), unique=True)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.now(timezone.utc) + timedelta(hours=8))
