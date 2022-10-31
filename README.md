@@ -2,7 +2,7 @@
 使用爬蟲抓取運動網站的資料, 建立自動化爬取功能及更新資料庫內容, 設計API提供給使用者獲取想要的資料  
 * Selenium解決js渲染網頁部分, BeautifulSoup解析Html  
 * Requests將整理的參數串接後Get想要的內容  
-* MySQL資料庫存放數據  
+* MySQL資料庫存放數據 (SQLAlchemy) 
 * Flask建立API
 * Docker打包爬蟲程式, 能直接在linux tmux上開啟多視窗執行爬蟲腳本並監測運行情況  
 * 串接telegram bot, 建立指令對爬蟲腳本或資料庫進行操作, 並能自動通知目前更新的進度 (尚未完成)  
@@ -80,13 +80,28 @@ http://127.0.0.1:4434/player/group=pitching/team=Yankees/year=2022/top=1/orderBY
         "year": 2022
     }
 ````
+使用 SQLAlchemy 操作資料庫  
 http://127.0.0.1:4434/team_name=all
 *  輸入球隊名稱, 可查詢對應的球隊id, 輸入all可查詢全部球隊
 ````
-{
-    "111": "Red_Sox",
-    "119": "Dodgers",
-    "147": "Yankees"
-}
+    {
+        "111": "Red_Sox",
+        "119": "Dodgers",
+        "147": "Yankees"
+    }
 ````
-    
+http://127.0.0.1:4434/group=hitting/top=5/orderBY=hr  
+* 輸入分類, 篩選條件及排名(降冪排序)
+````
+    {
+        "AVG": 0.311,
+        "BB": 111,
+        "HR": 62,
+        "Hits": 177,
+        "RBI": 131,
+        "SO": 175,
+        "name": "Aaron_Judge",
+        "positions": "CF",
+        "team_id": 147
+    }
+````
