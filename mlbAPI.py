@@ -1,9 +1,10 @@
 from flask import Flask
 import json
-from Model.DB import mlb_DB
+from Model.DB import mlb_DB, Mlb_playerHitting, Mlb_teamName, Mlb_playerPitching
 import pymysql
 import os
-from flask_sqlalchemy import SQLAlchemy, session
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
 load_dotenv()
@@ -23,57 +24,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://shane:GKbCoMubLMQ6o@sgp
 # app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 db = SQLAlchemy(app)
 # db.init_app(app)
-
-# 模型( model )定義
-# 打者數據
-class Mlb_playerHitting(db.Model):
-    __tablename__ = 'mlb_playerHitting'
-    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
-    group = db.Column(db.String(45))
-    name = db.Column(db.Text)
-    positions = db.Column(db.String(45))
-    team_id = db.Column(db.Integer, db.ForeignKey('mlb_teamName.id')) # team_id 外鍵
-    team_rank = db.Column(db.Integer)
-    rank_count = db.Column(db.Integer)
-    r = db.Column(db.Integer)
-    h = db.Column(db.Integer)
-    hr = db.Column(db.Integer)
-    rbi = db.Column(db.Integer)
-    bb = db.Column(db.Integer)
-    so = db.Column(db.Integer)
-    avg = db.Column(db.Float)
-    ops = db.Column(db.Float)
-    year = db.Column(db.Integer)
-    updated_at = db.Column(
-        db.DateTime, default=datetime.now(timezone.utc) + timedelta(hours=8))
-
-
-    def __init__(self, group, name, positions, team_id, team_rank, 
-                 r, h, hr, rbi, bb, so, avg, ops, year):
-        self.group = group
-        self.name = name
-        self.positions = positions
-        self.team_id = team_id
-        self.team_rank = team_rank
-        self.r = r
-        self.h = h
-        self.hr = hr
-        self.rbi = rbi
-        self.bb = bb
-        self.so = so
-        self.avg = avg
-        self.ops = ops
-        self.year = year
-        
-
-# 球隊名稱
-class Mlb_teamName(db.Model):
-    __tablename__ = 'mlb_teamName'
-    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
-    team_name = db.Column(db.String(45), unique=True)
-    updated_at = db.Column(
-        db.DateTime, default=datetime.now(timezone.utc) + timedelta(hours=8))
-    
     
 @app.route('/')
 def home():
@@ -106,7 +56,6 @@ def get_HittingData(group:str, team:str, year:int, sortRange:int, order_by:str) 
     result = mlb_db.query(sql).fetchall() # type = list, len = 25
     return result
 
-
 @app.route('/team_name=<name>', methods=['GET'])
 def SearchFromTeamName(name:str) -> dict:
     """
@@ -133,4 +82,66 @@ def SearchFromTeamName(name:str) -> dict:
     # print(teamName_list)
     return teamName_list
 
+@app.route('/group=<group>/top=<int:sortRange>/orderBY=<order_by>', methods=['GET'])
+def SearchFromGroup(group:str, sortRange:int, order_by:str) -> dict:
+    """
+    輸入分類, 可查詢該分類所有資料
+        Args:
+            group (string): hitting / pitching
+            sortRange (int): 要篩選的數量
+            order_by (string): 篩選條件
+        Returns:
+            回傳範例：
+                    {
+                        "AVG": 0.311,
+                        "BB": 111,
+                        "HR": 62,
+                        "Hits": 177,
+                        "RBI": 131,
+                        "SO": 175,
+                        "name": "Aaron_Judge",
+                        "positions": "CF",
+                        "team_id": 147
+                     }
+
+    """
+    group_type = group.capitalize() # 第一個字變大寫
+    groupData_list = []
+    if group_type == 'all':
+        result = db.session.query(Mlb_playerHitting).order_by("id").all()
+    elif group_type == 'Hitting':
+        result = db.session.query(Mlb_playerHitting).order_by(desc(f"{order_by}")).limit(sortRange)
+        
+        for items in result:
+            memberData_dict = {}
+            memberData_dict['name'] = items.name
+            memberData_dict['positions'] = items.positions
+            memberData_dict['team_id'] = items.team_id
+            memberData_dict['Hits'] = items.h
+            memberData_dict['HR'] = items.hr
+            memberData_dict['RBI'] = items.rbi
+            memberData_dict['BB'] = items.bb
+            memberData_dict['SO'] = items.so
+            memberData_dict['AVG'] = items.avg
+            groupData_list.append(memberData_dict)
+            
+    elif group_type == 'Pitching':
+        result = db.session.query(Mlb_playerPitching).order_by(desc(f"{order_by}")).limit(sortRange)
+        
+        for items in result:
+            memberData_dict = {}
+            memberData_dict['BB'] = items.bb
+            memberData_dict['SO'] = items.so
+            memberData_dict['Lose'] = items.l
+            memberData_dict['Wins'] = items.w
+            memberData_dict['name'] = items.name
+            memberData_dict['team_id'] = items.team_id
+    
+            groupData_list.append(memberData_dict)
+    else:
+        content = '輸入參數錯誤，請輸入hitting or pitching'
+        groupData_list.append(content)
+    
+    return groupData_list
+    
 app.run(host='0.0.0.0', port=4434, debug=True) 
