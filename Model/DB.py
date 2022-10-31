@@ -44,7 +44,7 @@ class mlb_DB:
         self.conn.close()
       
 
-# 模型( model )定義
+# 打擊數據
 class Mlb_playerHitting(db.Model):
     __tablename__ = 'mlb_playerHitting'
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
@@ -67,13 +67,14 @@ class Mlb_playerHitting(db.Model):
         db.DateTime, default=datetime.now(timezone.utc) + timedelta(hours=8))
 
 
-    def __init__(self, group, name, positions, team_id, team_rank, 
+    def __init__(self, group, name, positions, team_id, team_rank, rank_count,
                  r, h, hr, rbi, bb, so, avg, ops, year):
         self.group = group
         self.name = name
         self.positions = positions
         self.team_id = team_id
         self.team_rank = team_rank
+        self.rank_count = rank_count
         self.r = r
         self.h = h
         self.hr = hr
@@ -91,3 +92,52 @@ class Mlb_teamName(db.Model):
     team_name = db.Column(db.String(45), unique=True)
     updated_at = db.Column(
         db.DateTime, default=datetime.now(timezone.utc) + timedelta(hours=8))
+    
+# 投球數據
+class Mlb_playerPitching(db.Model):
+    __tablename__ = 'mlb_playerPitching'
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    group = db.Column(db.String(45))
+    name = db.Column(db.Text, nullable=False)
+    team_id = db.Column(db.Integer, db.ForeignKey('mlb_teamName.id')) # team_id 外鍵
+    team_rank = db.Column(db.Integer, nullable=False)
+    rank_count = db.Column(db.Integer)
+    w = db.Column(db.Integer)
+    l = db.Column(db.Integer)
+    era = db.Column(db.Float)
+    ip = db.Column(db.Integer)
+    h = db.Column(db.Integer)
+    r = db.Column(db.Integer)
+    er = db.Column(db.Integer)
+    hr = db.Column(db.Integer)
+    hb = db.Column(db.Integer)
+    bb = db.Column(db.Integer)
+    so = db.Column(db.Integer)
+    whip = db.Column(db.Float)
+    avg = db.Column(db.Float)
+    year = db.Column(db.Integer)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.now(timezone.utc) + timedelta(hours=8))
+
+
+    def __init__(self, group, name, team_id, team_rank, rank_count,
+                 w, l, era, ip, h, r, er, hr, hb, bb, so, whip, avg, year):
+        self.group = group
+        self.name = name
+        self.team_id = team_id
+        self.team_rank = team_rank
+        self.rank_count = rank_count
+        self.w = w
+        self.l = l
+        self.era = era
+        self.ip = ip
+        self.h = h
+        self.r = r
+        self.er = er
+        self.hr = hr
+        self.hb = hb
+        self.bb = bb
+        self.so = so
+        self.whip = whip
+        self.avg = avg
+        self.year = year
