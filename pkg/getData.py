@@ -1,9 +1,7 @@
-from cmath import exp
-from db.DB import mlb_DB
+from Model.DB import mlb_DB
 from pkg.message import message
 import requests
 import json
-import time
 db = mlb_DB()
 
 # 篩選出球隊
@@ -158,15 +156,16 @@ def playerPitching():
                     message(content)
                     
                     # 插入新的資料
-                    sql = "INSERT INTO `mlb_playerPitching` (`group`,`name`,`team_id`,`team_rank`,`W`,`L`,`ERA`,`IP`,`H`,`R`,`ER`,`HR`,`HB`,`BB` \
+                    sql = "INSERT INTO `mlb_playerPitching` (`group`,`name`,`team_id`,`team_rank`,`rank_count`, `W`,`L`,`ERA`,`IP`,`H`,`R`,`ER`,`HR`,`HB`,`BB` \
                         ,`SO`, `WHIP`, `AVG`, `year`) \
                     values ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', \
-                        '{}', '{}', '{}', '{}', '{}', '{}', '{}');".format(group, p_name,p_team_id,p_rank, p_win, p_lose, p_era, p_ip, p_hits, p_runs, p_er, p_hr,
+                        '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}');".format(group, p_name,p_team_id,p_rank, count,p_win, p_lose, p_era, p_ip, p_hits, p_runs, p_er, p_hr,
                     p_hb,p_bb,p_so,p_whip,p_avg,year)
                     db.query(sql)
-                    content = f'insert: ', {year}, {group}, {p_name},{p_team_id}, {p_rank},{p_win}, {p_lose}, {p_era}, {p_ip}, {p_hits}, {p_runs}, {p_er}, {p_hr},
+                    content = f'insert: ', {year}, {group}, {p_name},{p_team_id}, {p_rank}, {count},{p_win}, {p_lose}, {p_era}, {p_ip}, {p_hits}, {p_runs}, {p_er}, {p_hr},
                     {p_hb},{p_bb},{p_so},{p_whip},{p_avg}, 'success!!'
                     message(content)
+                count += 1
             db.close()
             
             
